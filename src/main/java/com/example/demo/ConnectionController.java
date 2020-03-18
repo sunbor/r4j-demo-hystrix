@@ -37,69 +37,9 @@ public class ConnectionController {
 	@RequestMapping("/**")
 	public String connection(HttpServletRequest req, HttpServletResponse resp,
 			@RequestParam(value = "lastName", required = false) String lastName) throws Exception {
-		String test = new DemoHystrixCommand(Dispatcher(req, resp, lastName)).execute();
+//		String test = new DemoHystrixCommand(Dispatcher(req, resp, lastName)).execute();
+		String test = new DemoHystrixCommand("hi its me again", req, resp, lastName).execute();
 		return test;
-	}
-
-	private String Dispatcher(HttpServletRequest req, HttpServletResponse resp, String lastName)
-			throws ConnectException {
-
-		String result = null;
-		if (req.getRequestURL().toString().contains(".png")) {
-			result = graphics(req, resp, Integer.toString(port));
-		} else {
-			result = makeConnection(req, resp, Integer.toString(port), lastName);
-		}
-		if (result == null) {
-			throw new ConnectException();
-		}
-		if (resp.getStatus() == 200)
-			System.out.println("connected to port " + (port - 1));
-		return result;
-	}
-
-	// accesses the other application
-	private String makeConnection(HttpServletRequest req, HttpServletResponse resp, String port, String lastName) {
-		System.out.println(port);
-
-		HttpGet request = new HttpGet(req.getRequestURL().toString().replaceFirst("8081", port));
-		if (lastName != null) {
-			request = new HttpGet(req.getRequestURL().toString().replaceFirst("8081", port) + "?LastName=" + lastName);
-		}
-
-		try (CloseableHttpResponse response = httpClient.execute(request)) {
-
-			// Get HttpResponse Status
-			System.out.println(response.getStatusLine().toString());
-			System.out.println(1);
-			HttpEntity entity = response.getEntity();
-			Header headers = entity.getContentType();
-			System.out.println(headers);
-
-			if (entity != null) {
-				String result = EntityUtils.toString(entity);
-				return result;
-			}
-		} catch (Exception e) {
-			// e.printStackTrace();
-		}
-		return null;
-	}
-
-	private String graphics(HttpServletRequest req, HttpServletResponse resp, String port) {
-		try {
-			BufferedImage image = ImageIO.read(new URL(req.getRequestURL().toString().replaceFirst("8081", port)));
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			ImageIO.write(image, "png", os);
-			InputStream is = new ByteArrayInputStream(os.toByteArray());
-
-			resp.setContentType(MediaType.IMAGE_PNG_VALUE);
-			IOUtils.copy(is, resp.getOutputStream());
-			return "done";
-		} catch (Exception e) {
-			// e.printStackTrace();
-		}
-		return null;
 	}
 
 }
