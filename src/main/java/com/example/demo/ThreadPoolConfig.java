@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,16 +27,18 @@ public class ThreadPoolConfig {
 	private int metricsRollingStatisticalWindowInMilliseconds;
 	private int metricsRollingStatisticalWindowBuckets;
 	
+	@Bean
+	@ConfigurationProperties(prefix = "hystrix")
 	public Setter getThreadPoolProp() {
 		return HystrixThreadPoolProperties.Setter()
-				.withCoreSize(10)
-				.withMaximumSize(10)
-				.withMaxQueueSize(-1)
-				.withQueueSizeRejectionThreshold(5)
-				.withKeepAliveTimeMinutes(1)
-				.withAllowMaximumSizeToDivergeFromCoreSize(false)
-				.withMetricsRollingStatisticalWindowInMilliseconds(10000)
-				.withMetricsRollingStatisticalWindowBuckets(10)
+				.withCoreSize(coreSize)
+				.withMaximumSize(maximumSize)
+				.withMaxQueueSize(maxQueueSize)
+				.withQueueSizeRejectionThreshold(queueSizeRejectionThreshold)
+				.withKeepAliveTimeMinutes(keepAliveTimeMinutes)
+				.withAllowMaximumSizeToDivergeFromCoreSize(allowMaximumSizeToDivergeFromCoreSize)
+				.withMetricsRollingStatisticalWindowInMilliseconds(metricsRollingStatisticalWindowInMilliseconds)
+				.withMetricsRollingStatisticalWindowBuckets(metricsRollingStatisticalWindowBuckets)
 				;
 	}
 
