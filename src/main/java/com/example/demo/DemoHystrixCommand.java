@@ -1,17 +1,13 @@
 package com.example.demo;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,11 +21,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.HystrixThreadPoolProperties;
 
 public class DemoHystrixCommand extends HystrixCommand<String> {
 
@@ -43,51 +42,32 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 	HttpServletResponse resp;
 	String lastName;
 	
-	public DemoHystrixCommand(String name, HttpServletRequest req, HttpServletResponse resp, String lastName) {
+	HystrixCommandProperties.Setter hcpSetter;
+	
+	HystrixThreadPoolProperties.Setter htppSetter;
+	
+	public DemoHystrixCommand(String name, HttpServletRequest req, HttpServletResponse resp, String lastName,
+			HystrixCommandProperties.Setter hcpSetter, HystrixThreadPoolProperties.Setter htppSetter) {
+		
 		super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("demo key"))
-				.andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
-//						.withExecutionIsolationStrategy(ExecutionIsolationStrategy.THREAD)
-//						.withExecutionTimeoutInMilliseconds(1000)
-//						.withExecutionTimeoutEnabled(true)
-//						.withExecutionIsolationThreadInterruptOnTimeout(true)
-//						.withExecutionIsolationThreadInterruptOnFutureCancel(true)
-//						.withExecutionIsolationSemaphoreMaxConcurrentRequests(10)
-//						.withFallbackIsolationSemaphoreMaxConcurrentRequests(10)
-//						.withFallbackEnabled(true)
-//						.withCircuitBreakerEnabled(true)
-//						.withCircuitBreakerRequestVolumeThreshold(10)
-//						.withCircuitBreakerSleepWindowInMilliseconds(5000)
-//						.withCircuitBreakerErrorThresholdPercentage(50)
-//						.withCircuitBreakerForceOpen(false)
-//						.withCircuitBreakerForceClosed(false)
-////						.withMetricsRollingStatisticalWindowInMilliseconds(10000)
-////						.withMetricsRollingStatisticalWindowBuckets(10)
-////						.withMetricsRollingPercentileEnabled(true)
-////						.withMetricsRollingPercentileWindowInMilliseconds(60000)
-////						.withMetricsRollingPercentileWindowBuckets(6)
-////						.withMetricsRollingPercentileBucketSize(100)
-////						.withMetricsHealthSnapshotIntervalInMilliseconds(500)
-////						.withRequestCacheEnabled(true)
-////						.withRequestLogEnabled(true)
-//						)
-//				.andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
-//						.withCoreSize(10)
-//						.withMaximumSize(10)
-//						.withMaxQueueSize(-1)
-//						.withQueueSizeRejectionThreshold(5)
-//						.withKeepAliveTimeMinutes(1)
-//						.withAllowMaximumSizeToDivergeFromCoreSize(false)
-////						.withMetricsRollingStatisticalWindowInMilliseconds(10000)
-////						.withMetricsRollingStatisticalWindowBuckets(10)
+				.andCommandPropertiesDefaults(hcpSetter
+						)
+				.andThreadPoolPropertiesDefaults(htppSetter
 						));
+		
 		this.name = name;
 		this.req = req;
 		this.resp = resp;
 		this.lastName = lastName;
+		this.hcpSetter = hcpSetter;
+		this.htppSetter = htppSetter;
 	}
 	
 	@Override
 	protected String run() throws ConnectException {
+		
+		//logger.trace("request volume threshold: " + hcpSetter.getCircuitBreakerRequestVolumeThreshold());
+
 		
 		String connectResult = "default value";
 		logger.trace("inside hystrix run method");
