@@ -66,8 +66,8 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 	@Override
 	protected String run() throws ConnectException {
 		
-		logger.trace("request volume threshold: " + hcpSetter.getCircuitBreakerRequestVolumeThreshold());
-		logger.trace("thread pool core size: " + htppSetter.getCoreSize());
+//		logger.trace("request volume threshold: " + hcpSetter.getCircuitBreakerRequestVolumeThreshold());
+//		logger.trace("thread pool core size: " + htppSetter.getCoreSize());
 
 
 		
