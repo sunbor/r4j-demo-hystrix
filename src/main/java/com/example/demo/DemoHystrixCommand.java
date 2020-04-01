@@ -25,8 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 
+import com.netflix.hystrix.HystrixCircuitBreaker;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.HystrixThreadPoolProperties;
 
@@ -50,10 +52,9 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 			HystrixCommandProperties.Setter hcpSetter, HystrixThreadPoolProperties.Setter htppSetter) {
 		
 		super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("demo key"))
-				.andCommandPropertiesDefaults(hcpSetter
-						)
-				.andThreadPoolPropertiesDefaults(htppSetter
-						));
+//				.andCommandPropertiesDefaults(hcpSetter)
+//				.andThreadPoolPropertiesDefaults(htppSetter)
+				);
 		
 		this.name = name;
 		this.req = req;
@@ -66,8 +67,13 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 	@Override
 	protected String run() throws ConnectException {
 		
-//		logger.trace("request volume threshold: " + hcpSetter.getCircuitBreakerRequestVolumeThreshold());
-//		logger.trace("thread pool core size: " + htppSetter.getCoreSize());
+		logger.trace("request volume threshold: " + hcpSetter.getCircuitBreakerRequestVolumeThreshold());
+		logger.trace("thread pool core size: " + htppSetter.getCoreSize());
+		logger.trace("bucket size or whatever: " + htppSetter.getMetricsRollingStatisticalWindowInMilliseconds());
+//		logger.trace("is circuit breaker open: " +
+//		HystrixCircuitBreaker.Factory.getInstance(HystrixCommandKey.Factory.asKey("demo key")).isOpen());
+
+
 
 
 		
