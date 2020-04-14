@@ -25,11 +25,11 @@ public class ConnectionController {
 
 	@Lazy
 	@Autowired
-	HystrixCommandProperties.Setter hcpSetter;
+	private HystrixCommandProperties.Setter hcpSetter;
 	
 	@Lazy
 	@Autowired
-	HystrixThreadPoolProperties.Setter htppSetter;
+	private HystrixThreadPoolProperties.Setter htppSetter;
 	
 	@RequestMapping("/**")
 	public String connection(HttpServletRequest req, HttpServletResponse resp,

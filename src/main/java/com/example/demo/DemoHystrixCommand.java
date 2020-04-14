@@ -30,6 +30,7 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandKey;
 import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.HystrixCommandProperties.ExecutionIsolationStrategy;
 import com.netflix.hystrix.HystrixThreadPoolProperties;
 
 public class DemoHystrixCommand extends HystrixCommand<String> {
@@ -44,14 +45,49 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 	HttpServletResponse resp;
 	String lastName;
 	
-	HystrixCommandProperties.Setter hcpSetter;
-	
-	HystrixThreadPoolProperties.Setter htppSetter;
+//	HystrixCommandProperties.Setter hcpSetter;
+//	
+//	HystrixThreadPoolProperties.Setter htppSetter;
 	
 	public DemoHystrixCommand(String name, HttpServletRequest req, HttpServletResponse resp, String lastName,
 			HystrixCommandProperties.Setter hcpSetter, HystrixThreadPoolProperties.Setter htppSetter) {
 		
 		super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("demo key"))
+				.andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+						.withExecutionIsolationStrategy(ExecutionIsolationStrategy.THREAD)
+						.withExecutionTimeoutInMilliseconds(hcpSetter.getExecutionTimeoutInMilliseconds())
+						.withExecutionTimeoutEnabled(hcpSetter.getExecutionTimeoutEnabled())
+						.withExecutionIsolationThreadInterruptOnTimeout(hcpSetter.getExecutionIsolationThreadInterruptOnTimeout())
+						.withExecutionIsolationThreadInterruptOnFutureCancel(hcpSetter.getExecutionIsolationThreadInterruptOnFutureCancel())
+						.withExecutionIsolationSemaphoreMaxConcurrentRequests(hcpSetter.getExecutionIsolationSemaphoreMaxConcurrentRequests())
+						.withFallbackIsolationSemaphoreMaxConcurrentRequests(hcpSetter.getFallbackIsolationSemaphoreMaxConcurrentRequests())
+						.withFallbackEnabled(hcpSetter.getFallbackEnabled())
+						.withCircuitBreakerEnabled(hcpSetter.getCircuitBreakerEnabled())
+						.withCircuitBreakerRequestVolumeThreshold(hcpSetter.getCircuitBreakerRequestVolumeThreshold())
+						.withCircuitBreakerSleepWindowInMilliseconds(hcpSetter.getCircuitBreakerSleepWindowInMilliseconds())
+						.withCircuitBreakerErrorThresholdPercentage(hcpSetter.getCircuitBreakerErrorThresholdPercentage())
+						.withCircuitBreakerForceOpen(hcpSetter.getCircuitBreakerForceOpen())
+						.withCircuitBreakerForceClosed(hcpSetter.getCircuitBreakerForceClosed())
+						.withMetricsRollingStatisticalWindowInMilliseconds(hcpSetter.getMetricsRollingStatisticalWindowInMilliseconds())
+						.withMetricsRollingStatisticalWindowBuckets(hcpSetter.getMetricsRollingStatisticalWindowBuckets())
+						.withMetricsRollingPercentileEnabled(hcpSetter.getMetricsRollingPercentileEnabled())
+						.withMetricsRollingPercentileWindowInMilliseconds(hcpSetter.getMetricsRollingPercentileWindowInMilliseconds())
+						.withMetricsRollingPercentileWindowBuckets(hcpSetter.getMetricsRollingPercentileWindowBuckets())
+						.withMetricsRollingPercentileBucketSize(hcpSetter.getMetricsRollingPercentileBucketSize())
+						.withMetricsHealthSnapshotIntervalInMilliseconds(hcpSetter.getMetricsHealthSnapshotIntervalInMilliseconds())
+						.withRequestCacheEnabled(hcpSetter.getRequestCacheEnabled())
+						.withRequestLogEnabled(hcpSetter.getRequestLogEnabled())
+						)
+				.andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
+						.withCoreSize(htppSetter.getCoreSize())
+						.withMaximumSize(htppSetter.getMaximumSize())
+						.withMaxQueueSize(htppSetter.getMaxQueueSize())
+						.withQueueSizeRejectionThreshold(htppSetter.getQueueSizeRejectionThreshold())
+						.withKeepAliveTimeMinutes(htppSetter.getKeepAliveTimeMinutes())
+						.withAllowMaximumSizeToDivergeFromCoreSize(htppSetter.getAllowMaximumSizeToDivergeFromCoreSize())
+						.withMetricsRollingStatisticalWindowInMilliseconds(htppSetter.getMetricsRollingStatisticalWindowInMilliseconds())
+						.withMetricsRollingStatisticalWindowBuckets(htppSetter.getMetricsRollingStatisticalWindowBuckets())
+				)
 //				.andCommandPropertiesDefaults(hcpSetter)
 //				.andThreadPoolPropertiesDefaults(htppSetter)
 				);
@@ -60,18 +96,17 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 		this.req = req;
 		this.resp = resp;
 		this.lastName = lastName;
-		this.hcpSetter = hcpSetter;
-		this.htppSetter = htppSetter;
+//		this.hcpSetter = hcpSetter;
+//		this.htppSetter = htppSetter;
 	}
 	
 	@Override
 	protected String run() throws ConnectException {
 		
-		logger.trace("request volume threshold: " + hcpSetter.getCircuitBreakerRequestVolumeThreshold());
-		logger.trace("thread pool core size: " + htppSetter.getCoreSize());
-		logger.trace("bucket size or whatever: " + htppSetter.getMetricsRollingStatisticalWindowInMilliseconds());
-//		logger.trace("is circuit breaker open: " +
-//		HystrixCircuitBreaker.Factory.getInstance(HystrixCommandKey.Factory.asKey("demo key")).isOpen());
+//		logger.trace("request volume threshold: " + hcpSetter.getCircuitBreakerRequestVolumeThreshold());
+//		logger.trace("thread pool core size: " + htppSetter.getCoreSize());
+//		logger.trace("bucket size or whatever: " + htppSetter.getMetricsRollingStatisticalWindowInMilliseconds());
+//		logger.trace("is circuit breaker open: " + HystrixCircuitBreaker.Factory.getInstance(HystrixCommandKey.Factory.asKey("demo key")).isOpen());
 
 
 
