@@ -36,7 +36,7 @@ public class ConnectionController {
 			@RequestParam(value = "lastName", required = false) String lastName) throws Exception {
 //		String test = new DemoHystrixCommand(Dispatcher(req, resp, lastName)).execute();
 //		String test = new DemoHystrixCommand("hi its me again", req, resp, lastName).execute();
-		String test = new DemoHystrixCommand("hi its me yet again", req, resp, lastName, hcpSetter, htppSetter).execute();
+		String test = new DemoHystrixCommand("demo hystrix command", req, resp, lastName, hcpSetter, htppSetter).execute();
 		return test;
 	}
 

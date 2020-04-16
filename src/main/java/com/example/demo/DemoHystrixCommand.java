@@ -38,7 +38,9 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 	private final String name;
 	Logger logger = Logger.getLogger(DemoHystrixCommand.class);
 	
-	static int port = 8082;
+	static int thisPort = 8081;
+	static int port1 = 8082;
+	static int port2 = 8083;
 	private final CloseableHttpClient httpClient = HttpClients.createDefault();
 	
 	HttpServletRequest req;
@@ -53,43 +55,43 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 			HystrixCommandProperties.Setter hcpSetter, HystrixThreadPoolProperties.Setter htppSetter) {
 		
 		super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("demo key"))
-				.andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
-						.withExecutionIsolationStrategy(ExecutionIsolationStrategy.THREAD)
-						.withExecutionTimeoutInMilliseconds(hcpSetter.getExecutionTimeoutInMilliseconds())
-						.withExecutionTimeoutEnabled(hcpSetter.getExecutionTimeoutEnabled())
-						.withExecutionIsolationThreadInterruptOnTimeout(hcpSetter.getExecutionIsolationThreadInterruptOnTimeout())
-						.withExecutionIsolationThreadInterruptOnFutureCancel(hcpSetter.getExecutionIsolationThreadInterruptOnFutureCancel())
-						.withExecutionIsolationSemaphoreMaxConcurrentRequests(hcpSetter.getExecutionIsolationSemaphoreMaxConcurrentRequests())
-						.withFallbackIsolationSemaphoreMaxConcurrentRequests(hcpSetter.getFallbackIsolationSemaphoreMaxConcurrentRequests())
-						.withFallbackEnabled(hcpSetter.getFallbackEnabled())
-						.withCircuitBreakerEnabled(hcpSetter.getCircuitBreakerEnabled())
-						.withCircuitBreakerRequestVolumeThreshold(hcpSetter.getCircuitBreakerRequestVolumeThreshold())
-						.withCircuitBreakerSleepWindowInMilliseconds(hcpSetter.getCircuitBreakerSleepWindowInMilliseconds())
-						.withCircuitBreakerErrorThresholdPercentage(hcpSetter.getCircuitBreakerErrorThresholdPercentage())
-						.withCircuitBreakerForceOpen(hcpSetter.getCircuitBreakerForceOpen())
-						.withCircuitBreakerForceClosed(hcpSetter.getCircuitBreakerForceClosed())
-						.withMetricsRollingStatisticalWindowInMilliseconds(hcpSetter.getMetricsRollingStatisticalWindowInMilliseconds())
-						.withMetricsRollingStatisticalWindowBuckets(hcpSetter.getMetricsRollingStatisticalWindowBuckets())
-						.withMetricsRollingPercentileEnabled(hcpSetter.getMetricsRollingPercentileEnabled())
-						.withMetricsRollingPercentileWindowInMilliseconds(hcpSetter.getMetricsRollingPercentileWindowInMilliseconds())
-						.withMetricsRollingPercentileWindowBuckets(hcpSetter.getMetricsRollingPercentileWindowBuckets())
-						.withMetricsRollingPercentileBucketSize(hcpSetter.getMetricsRollingPercentileBucketSize())
-						.withMetricsHealthSnapshotIntervalInMilliseconds(hcpSetter.getMetricsHealthSnapshotIntervalInMilliseconds())
-						.withRequestCacheEnabled(hcpSetter.getRequestCacheEnabled())
-						.withRequestLogEnabled(hcpSetter.getRequestLogEnabled())
-						)
-				.andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
-						.withCoreSize(htppSetter.getCoreSize())
-						.withMaximumSize(htppSetter.getMaximumSize())
-						.withMaxQueueSize(htppSetter.getMaxQueueSize())
-						.withQueueSizeRejectionThreshold(htppSetter.getQueueSizeRejectionThreshold())
-						.withKeepAliveTimeMinutes(htppSetter.getKeepAliveTimeMinutes())
-						.withAllowMaximumSizeToDivergeFromCoreSize(htppSetter.getAllowMaximumSizeToDivergeFromCoreSize())
-						.withMetricsRollingStatisticalWindowInMilliseconds(htppSetter.getMetricsRollingStatisticalWindowInMilliseconds())
-						.withMetricsRollingStatisticalWindowBuckets(htppSetter.getMetricsRollingStatisticalWindowBuckets())
-				)
-//				.andCommandPropertiesDefaults(hcpSetter)
-//				.andThreadPoolPropertiesDefaults(htppSetter)
+//				.andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+//						.withExecutionIsolationStrategy(ExecutionIsolationStrategy.THREAD)
+//						.withExecutionTimeoutInMilliseconds(hcpSetter.getExecutionTimeoutInMilliseconds())
+//						.withExecutionTimeoutEnabled(hcpSetter.getExecutionTimeoutEnabled())
+//						.withExecutionIsolationThreadInterruptOnTimeout(hcpSetter.getExecutionIsolationThreadInterruptOnTimeout())
+//						.withExecutionIsolationThreadInterruptOnFutureCancel(hcpSetter.getExecutionIsolationThreadInterruptOnFutureCancel())
+//						.withExecutionIsolationSemaphoreMaxConcurrentRequests(hcpSetter.getExecutionIsolationSemaphoreMaxConcurrentRequests())
+//						.withFallbackIsolationSemaphoreMaxConcurrentRequests(hcpSetter.getFallbackIsolationSemaphoreMaxConcurrentRequests())
+//						.withFallbackEnabled(hcpSetter.getFallbackEnabled())
+//						.withCircuitBreakerEnabled(hcpSetter.getCircuitBreakerEnabled())
+//						.withCircuitBreakerRequestVolumeThreshold(hcpSetter.getCircuitBreakerRequestVolumeThreshold())
+//						.withCircuitBreakerSleepWindowInMilliseconds(hcpSetter.getCircuitBreakerSleepWindowInMilliseconds())
+//						.withCircuitBreakerErrorThresholdPercentage(hcpSetter.getCircuitBreakerErrorThresholdPercentage())
+//						.withCircuitBreakerForceOpen(hcpSetter.getCircuitBreakerForceOpen())
+//						.withCircuitBreakerForceClosed(hcpSetter.getCircuitBreakerForceClosed())
+//						.withMetricsRollingStatisticalWindowInMilliseconds(hcpSetter.getMetricsRollingStatisticalWindowInMilliseconds())
+//						.withMetricsRollingStatisticalWindowBuckets(hcpSetter.getMetricsRollingStatisticalWindowBuckets())
+//						.withMetricsRollingPercentileEnabled(hcpSetter.getMetricsRollingPercentileEnabled())
+//						.withMetricsRollingPercentileWindowInMilliseconds(hcpSetter.getMetricsRollingPercentileWindowInMilliseconds())
+//						.withMetricsRollingPercentileWindowBuckets(hcpSetter.getMetricsRollingPercentileWindowBuckets())
+//						.withMetricsRollingPercentileBucketSize(hcpSetter.getMetricsRollingPercentileBucketSize())
+//						.withMetricsHealthSnapshotIntervalInMilliseconds(hcpSetter.getMetricsHealthSnapshotIntervalInMilliseconds())
+//						.withRequestCacheEnabled(hcpSetter.getRequestCacheEnabled())
+//						.withRequestLogEnabled(hcpSetter.getRequestLogEnabled())
+//						)
+//				.andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
+//						.withCoreSize(htppSetter.getCoreSize())
+//						.withMaximumSize(htppSetter.getMaximumSize())
+//						.withMaxQueueSize(htppSetter.getMaxQueueSize())
+//						.withQueueSizeRejectionThreshold(htppSetter.getQueueSizeRejectionThreshold())
+//						.withKeepAliveTimeMinutes(htppSetter.getKeepAliveTimeMinutes())
+//						.withAllowMaximumSizeToDivergeFromCoreSize(htppSetter.getAllowMaximumSizeToDivergeFromCoreSize())
+//						.withMetricsRollingStatisticalWindowInMilliseconds(htppSetter.getMetricsRollingStatisticalWindowInMilliseconds())
+//						.withMetricsRollingStatisticalWindowBuckets(htppSetter.getMetricsRollingStatisticalWindowBuckets())
+//				)
+				.andCommandPropertiesDefaults(hcpSetter)
+				.andThreadPoolPropertiesDefaults(htppSetter)
 				);
 		
 		this.name = name;
@@ -103,19 +105,10 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 	@Override
 	protected String run() throws ConnectException {
 		
-//		logger.trace("request volume threshold: " + hcpSetter.getCircuitBreakerRequestVolumeThreshold());
-//		logger.trace("thread pool core size: " + htppSetter.getCoreSize());
-//		logger.trace("bucket size or whatever: " + htppSetter.getMetricsRollingStatisticalWindowInMilliseconds());
-//		logger.trace("is circuit breaker open: " + HystrixCircuitBreaker.Factory.getInstance(HystrixCommandKey.Factory.asKey("demo key")).isOpen());
-
-
-
-
-		
 		String connectResult = "default value";
 		logger.trace("inside hystrix run method");
 		try {
-			connectResult = Dispatcher(req, resp, lastName);
+			connectResult = Dispatcher(req, resp, lastName, port1);
 		} catch (ConnectException e) {
 			logger.trace("dispatcher threw connect exception");
 			throw new ConnectException();
@@ -128,18 +121,18 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
     @Override
     protected String getFallback() {
     	logger.trace("inside fallback method");
-    	port++;
+    	//port++;
     	String connectResult = "default fallback";
 		try {
-			connectResult = Dispatcher(req, resp, lastName);
+			connectResult = Dispatcher(req, resp, lastName, port2);
 		} catch (ConnectException e) {
 			logger.trace("fallback is also broken");
 			//e.printStackTrace();
 		}
-        return "Hello Failure " + name + "!";
+        return "this is the fallback " + name + "!" + connectResult;
     }
 		
-	private String Dispatcher(HttpServletRequest req, HttpServletResponse resp, String lastName)
+	private String Dispatcher(HttpServletRequest req, HttpServletResponse resp, String lastName, int port)
 			throws ConnectException {
 
 		String result = null;
@@ -151,15 +144,21 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 		if (result == null) {
 			throw new ConnectException();
 		}
-		if (resp.getStatus() == 200)
-			System.out.println("connected to port " + (port - 1));
+		if (resp.getStatus() == 200) {
+			//System.out.println("connected to port " + (port - 1));
+			logger.info("connected to port " + (port));
+		}
+		if(resp.getStatus() == 502) {
+			logger.info("gateway error at port " + (port));
+		}
 		return result;
 	}
 
 	// accesses the other application
 	private String makeConnection(HttpServletRequest req, HttpServletResponse resp, String port, String lastName) {
-		System.out.println(port);
-
+		//System.out.println(port);
+		logger.trace("port: " + port);
+		
 		HttpGet request = new HttpGet(req.getRequestURL().toString().replaceFirst("8081", port));
 		if (lastName != null) {
 			request = new HttpGet(req.getRequestURL().toString().replaceFirst("8081", port) + "?LastName=" + lastName);
@@ -168,17 +167,20 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 		try (CloseableHttpResponse response = httpClient.execute(request)) {
 
 			// Get HttpResponse Status
-			System.out.println(response.getStatusLine().toString());
-			System.out.println(1);
+			logger.trace("HttpResponse status: " + response.getStatusLine().toString());
+			//System.out.println(1);
 			HttpEntity entity = response.getEntity();
 			Header headers = entity.getContentType();
-			System.out.println(headers);
-
+			logger.trace("headers: " + headers);
+			
 			if (entity != null) {
 				String result = EntityUtils.toString(entity);
 				return result;
 			}
 		} catch (Exception e) {
+			resp.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+			logger.error("CBException: failed to make connection");
+
 			// e.printStackTrace();
 		}
 		return null;
@@ -195,6 +197,8 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 			IOUtils.copy(is, resp.getOutputStream());
 			return "done";
 		} catch (Exception e) {
+			resp.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+			logger.error("CBException: failed to make graphics connection");
 			// e.printStackTrace();
 		}
 		return null;
