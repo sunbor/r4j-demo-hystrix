@@ -121,7 +121,7 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
     @Override
     protected String getFallback() {
     	logger.trace("inside fallback method");
-    	//port++;
+
     	String connectResult = "default fallback";
 		try {
 			connectResult = Dispatcher(req, resp, lastName, port2);
@@ -129,7 +129,7 @@ public class DemoHystrixCommand extends HystrixCommand<String> {
 			logger.trace("fallback is also broken");
 			//e.printStackTrace();
 		}
-        return "this is the fallback " + name + "!" + connectResult;
+        return "this is the fallback: " + name + " | connection output: " + connectResult;
     }
 		
 	private String Dispatcher(HttpServletRequest req, HttpServletResponse resp, String lastName, int port)

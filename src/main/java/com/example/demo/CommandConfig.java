@@ -39,10 +39,10 @@ public class CommandConfig {
 //	HystrixCommandProperties prop;
 	
 	//command properties
-	private ExecutionIsolationStrategy executionIsolationStrategy = ExecutionIsolationStrategy.THREAD;
+	private ExecutionIsolationStrategy executionIsolationStrategy = ExecutionIsolationStrategy.SEMAPHORE;
 	private int executionTimeoutInMilliseconds;
 	private boolean executionTimeoutEnabled;
-	private boolean executionIsoloationThreadInterruptOnTimeout;
+	private boolean executionIsolationThreadInterruptOnTimeout;
 	private boolean executionIsolationThreatInterruptOnFutureCancel;
 	private int executionIsolationSemaphoreMaxConcurrentRequests;
 	
@@ -63,8 +63,13 @@ public class CommandConfig {
 	private int metricsRollingPercentileWindowBuckets;
 	private int metricsRollingPercentileBucketSize;
 	private int metricsHealthSnapshotIntervalInMilliseconds;
+	
 	private boolean requestCacheEnabled;
 	private boolean requestLogEnabled;
+	
+	private int maxRequestsInBatch;
+	private int timerDelayInMillisconds;
+	private boolean collapserRequestCacheEnabled;
 
 	public static HystrixCommandProperties.Setter hcp = HystrixCommandProperties.Setter()
 		.withCircuitBreakerRequestVolumeThreshold(20);
@@ -77,7 +82,7 @@ public class CommandConfig {
 				.withExecutionIsolationStrategy(executionIsolationStrategy)
 				.withExecutionTimeoutInMilliseconds(executionTimeoutInMilliseconds)
 				.withExecutionTimeoutEnabled(executionTimeoutEnabled)
-				.withExecutionIsolationThreadInterruptOnTimeout(executionIsoloationThreadInterruptOnTimeout)
+				.withExecutionIsolationThreadInterruptOnTimeout(executionIsolationThreadInterruptOnTimeout)
 				.withExecutionIsolationThreadInterruptOnFutureCancel(executionIsolationThreatInterruptOnFutureCancel)
 				.withExecutionIsolationSemaphoreMaxConcurrentRequests(executionIsolationSemaphoreMaxConcurrentRequests)
 				.withFallbackIsolationSemaphoreMaxConcurrentRequests(fallbackIsolationSemaphoreMaxConcurrentRequests)
@@ -125,12 +130,12 @@ public class CommandConfig {
 		this.executionTimeoutEnabled = executionTimeoutEnabled;
 	}
 
-	public boolean isExecutionIsoloationThreadInterruptOnTimeout() {
-		return executionIsoloationThreadInterruptOnTimeout;
+	public boolean isExecutionIsolationThreadInterruptOnTimeout() {
+		return executionIsolationThreadInterruptOnTimeout;
 	}
 
-	public void setExecutionIsoloationThreadInterruptOnTimeout(boolean executionIsoloationThreadInterruptOnTimeout) {
-		this.executionIsoloationThreadInterruptOnTimeout = executionIsoloationThreadInterruptOnTimeout;
+	public void setExecutionIsoloationThreadInterruptOnTimeout(boolean executionIsolationThreadInterruptOnTimeout) {
+		this.executionIsolationThreadInterruptOnTimeout = executionIsolationThreadInterruptOnTimeout;
 	}
 
 	public boolean isExecutionIsolationThreatInterruptOnFutureCancel() {
